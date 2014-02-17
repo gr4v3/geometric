@@ -1,0 +1,517 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<script type="text/javascript" src="mootools.js"></script>
+<link rel="stylesheet" type="text/css" href="Icons/nave.css">
+</head>
+
+<body style="margin:0px;padding:0px;">
+<script type="text/javascript">
+
+
+var Fire = {
+	cache:[],
+	targets:[],
+	obj:function(prefix)
+	{
+		this.prefix = prefix;
+		this.element = new Element('div').addClass('fire_1');
+		this.create = function()
+		{
+			Fire.cache[this.prefix] = this;
+			this.element.injectInside(document.body);
+			
+			this.init = this.element.getCoordinates();
+			this.element.Fire = this;
+		}
+		
+		this.id = false;
+		this.step = 20;
+		this.refresh = 5;
+		
+		this.UP = function(value)
+		{
+			var that = this;
+			var init = value.getCoordinates();
+			that.element.style.top = (init.top+12) + 'px';
+			that.element.style.left = (init.left+12) + 'px';
+			this.id = window.setInterval(function()
+			{
+				var top = init.top-=that.step;
+				that.element.style.top = top + 'px';
+				if(top<=value.Nave.Board.limit.top)
+				{
+					that.element.remove();
+					window.clearInterval(that.id);
+				}
+				that.collide({top:top,left:init.left});
+			},this.refresh);
+		}
+		this.DOWN = function(value)
+		{
+			var that = this;
+			var init = value.getCoordinates();
+			that.element.style.top = (init.top+12) + 'px';
+			that.element.style.left = (init.left+12) + 'px';
+			this.id = window.setInterval(function()
+			{
+				var top = init.top+=that.step;
+				that.element.style.top = top + 'px';
+				if(top>=value.Nave.Board.limit.bottom)
+				{
+					that.element.remove();
+					window.clearInterval(that.id);
+				}
+				that.collide({top:top,left:init.left});
+			},this.refresh);
+		}
+		this.RIGHT = function(value)
+		{
+			var that = this;
+			var init = value.getCoordinates();
+			that.element.style.top = (init.top+12) + 'px';
+			that.element.style.left = (init.left+12) + 'px';
+			this.id = window.setInterval(function()
+			{
+				var left = init.left+=that.step;
+				that.element.style.left = left + 'px';
+				if(left>=value.Nave.Board.limit.right)
+				{
+					that.element.remove();
+					window.clearInterval(that.id);
+				}
+				that.collide({top:init.top,left:left});
+			},this.refresh);
+		}
+		this.LEFT = function(value)
+		{
+			var that = this;
+			var init = value.getCoordinates();
+			that.element.style.top = (init.top+12) + 'px';
+			that.element.style.left = (init.left+12) + 'px';
+			this.id = window.setInterval(function()
+			{
+				var left = init.left-=that.step;
+				that.element.style.left = left + 'px';
+				if(left<=value.Nave.Board.limit.left)
+				{
+					that.element.remove();
+					window.clearInterval(that.id);
+				}	
+				that.collide({top:init.top,left:left});
+			},this.refresh);
+		}
+		this.UPRIGHT = function(value)
+		{
+			var that = this;
+			var init = value.getCoordinates();
+			that.element.style.top = (init.top+12) + 'px';
+			that.element.style.left = (init.left+12) + 'px';
+			this.id = window.setInterval(function()
+			{
+				var left = init.left+=that.step;
+				var top = init.top-=that.step;
+				that.element.style.left = left + 'px';
+				that.element.style.top = top + 'px';
+				that.collide({top:top,left:left});
+				if(left>=value.Nave.Board.limit.right || top<=value.Nave.Board.limit.top)
+				{
+					that.element.remove();
+					window.clearInterval(that.id);
+				}
+				
+			},this.refresh);
+		}
+		this.UPLEFT = function(value)
+		{
+			var that = this;
+			var init = value.getCoordinates();
+			that.element.style.top = (init.top+12) + 'px';
+			that.element.style.left = (init.left+12) + 'px';
+			this.id = window.setInterval(function()
+			{
+				var left = init.left-=that.step;
+				var top = init.top-=that.step;
+				that.element.style.left = left + 'px';
+				that.element.style.top = top + 'px';
+				that.collide({top:top,left:left});
+				if(left<=value.Nave.Board.limit.left || top<=value.Nave.Board.limit.top)
+				{
+					that.element.remove();
+					window.clearInterval(that.id);
+				}
+				
+			},this.refresh);
+		}
+		this.DOWNRIGHT = function(value)
+		{
+			var that = this;
+			var init = value.getCoordinates();
+			that.element.style.top = (init.top+12) + 'px';
+			that.element.style.left = (init.left+12) + 'px';
+			this.id = window.setInterval(function()
+			{
+				var left = init.left+=that.step;
+				var top = init.top+=that.step;
+				that.element.style.left = left + 'px';
+				that.element.style.top = top + 'px';
+				that.collide({top:top,left:left});
+				if(left>=value.Nave.Board.limit.right || top>=value.Nave.Board.limit.bottom)
+				{
+					that.element.remove();
+					window.clearInterval(that.id);
+				}
+				
+			},this.refresh);
+		}
+		this.DOWNLEFT = function(value)
+		{
+			var that = this;
+			var init = value.getCoordinates();
+			that.element.style.top = (init.top+12) + 'px';
+			that.element.style.left = (init.left+12) + 'px';
+			this.id = window.setInterval(function()
+			{
+				var left = init.left-=that.step;
+				var top = init.top+=that.step;
+				that.element.style.left = left + 'px';
+				that.element.style.top = top + 'px';
+				that.collide({top:top,left:left});
+				if(left<=value.Nave.Board.limit.left || top>=value.Nave.Board.limit.bottom)
+				{
+					that.element.remove();
+					window.clearInterval(that.id);
+				}
+				
+			},this.refresh);
+		}
+		
+		
+		this.collide = function(fire)
+		{
+			var that = this;
+			var target = false;
+			for(i in Nave.follower)
+			{
+				target = Nave.follower[i].element.getCoordinates();
+				
+				if(
+					(fire.left>target.left)&&(fire.left<target.right)&&
+					(fire.top>target.top)&&(fire.top<target.bottom)
+				) Nave.follower[i].stop();
+			}
+			
+		}
+	}
+}
+
+
+var Nave = {
+	cache:[],
+	obj:function(prefix)
+	{
+		this.prefix = prefix;
+		this.element = new Element('div').addClass('nave').addClass('N');
+		
+		this.init = {};
+		this.Board = false;
+		this.create = function()
+		{
+			Nave.cache[this.prefix] = this;
+			this.element.injectInside(document.body);
+			
+			this.init = this.element.getCoordinates();
+			this.element.Nave = this;
+		}
+		
+		this.id = false;
+		this.step = 1;
+		this.refresh = 1;
+		this.keyInput = false;
+		
+		this.start = function(value)
+		{
+			var that = this;
+			var move = function()
+			{
+				var coords = that.keyInput.buffer;
+				if(coords.contains(87))
+				{
+					if(coords.contains(65))
+					{
+						if(that.init.top>that.Board.limit.top
+							&& that.init.left>(that.Board.limit.left))
+						{	
+							that.element.style.top = (that.init.top-=that.step) + 'px';
+							that.element.style.left = (that.init.left-=that.step) + 'px';
+							that.element.className = 'nave LN';
+						}	
+					} else if(coords.contains(68))
+					{
+						if(that.init.top>that.Board.limit.top
+							&& that.init.left<(that.Board.limit.right-25))
+						{
+							that.element.style.top = (that.init.top-=that.step) + 'px';
+							that.element.style.left = (that.init.left+=that.step) + 'px';
+							that.element.className = 'nave RN';
+						}	
+					} else {						
+						if(that.init.top>that.Board.limit.top)
+						{
+							that.element.style.top = (that.init.top-=(that.step+1)) + 'px';
+							that.element.className = 'nave N';
+						}
+					}
+				} else if(coords.contains(83))
+				{
+					if(coords.contains(65))
+					{
+						if(that.init.left>that.Board.limit.left
+							&& that.init.top<(that.Board.limit.bottom-25))
+						{	
+							that.element.style.top = (that.init.top+=that.step) + 'px';
+							that.element.style.left = (that.init.left-=that.step) + 'px';
+							that.element.className = 'nave LS';
+						}	
+					} else if(coords.contains(68))
+					{
+						if(that.init.left<(that.Board.limit.right-25)
+							&& that.init.top<(that.Board.limit.bottom-25))
+						{
+							that.element.style.top = (that.init.top+=that.step) + 'px';
+							that.element.style.left = (that.init.left+=that.step) + 'px';
+							that.element.className = 'nave RS';
+						}
+					} else {
+						if(that.init.top<(that.Board.limit.bottom-25))
+						{
+							that.element.style.top = (that.init.top+=(that.step+1)) + 'px';
+							that.element.className = 'nave S';
+						}
+					}
+				} else if(coords.contains(65))
+				{
+					if(that.init.left>that.Board.limit.left)
+					{
+						that.element.style.left = (that.init.left-=(that.step+1)) + 'px';
+						that.element.className = 'nave L';
+					}
+				} else if(coords.contains(68))
+				{
+					if(that.init.left<(that.Board.limit.right-25))
+					{	
+						that.element.style.left = (that.init.left+=(that.step+1)) + 'px';
+						that.element.className = 'nave R';
+					}
+				}
+
+				if(coords.contains(38)) 
+				{
+					if(coords.contains(39))
+					{
+						var fire = new Fire.obj('qwe')
+						fire.create()
+						fire.UPRIGHT(that.element);
+					} else if(coords.contains(37))
+					{
+						var fire = new Fire.obj('qwe')
+							fire.create()
+							fire.UPLEFT(that.element);
+					} else {
+						var fire = new Fire.obj('qwe')
+						fire.create()
+						fire.UP(that.element);
+					}
+				} else if(coords.contains(40))
+				{
+					if(coords.contains(39))
+					{
+						var fire = new Fire.obj('qwe')
+						fire.create()
+						fire.DOWNRIGHT(that.element);
+					} else if(coords.contains(37))
+					{
+						var fire = new Fire.obj('qwe')
+							fire.create()
+							fire.DOWNLEFT(that.element);
+					} else {
+						var fire = new Fire.obj('qwe')
+						fire.create()
+						fire.DOWN(that.element);
+					}	
+				} else if(coords.contains(37))
+				{
+					var fire = new Fire.obj('qwe')
+						fire.create()
+						fire.LEFT(that.element);
+				} else if(coords.contains(39))
+				{
+					var fire = new Fire.obj('qwe')
+						fire.create()
+						fire.RIGHT(that.element);
+				}
+			}
+			this.id = window.setInterval(move,this.refresh);
+		}
+		
+		this.follow = function(target)
+		{
+			var that = this;
+			var player = target.element.getCoordinates();
+			var owner = this.element.getCoordinates();
+			var walk = new Fx.Styles(that.element, {duration:300,transition:Fx.Transitions.Quad.easeIn});
+			var move = function()
+			{
+					
+					player = target.element.getCoordinates();
+					owner = that.element.getCoordinates();
+					Nave.follower[that.prefix] = that;
+					walk.cancel();
+					walk.start({
+						'top': [owner.top,player.top],
+						'left': [owner.left,player.left]
+					});
+			
+			}
+			this.id = window.setInterval(move,this.refresh);
+		}
+		this.stop = function()
+		{
+			window.clearInterval(this.id);
+			this.element.remove();
+			delete Nave.follower[this.prefix];
+		}
+	},
+	follower:{}
+}
+
+
+var KeyHandler = new Class({
+    initialize: function(name){
+       	this.element = new Element('input')
+		.setProperty('type','button')
+		.setStyles(
+		{
+			'width':1,
+			'height':1,
+			'background-color':'#000000'
+		})
+		.injectInside(document.body);
+		
+		this.element.handler = this;
+		this.element.addEvent('keydown',this.element.handler.down);
+		this.element.addEvent('keyup',this.element.handler.up);
+		this.element.focus();
+    },
+	buffer:new Array(),
+	down:function(e)
+	{
+		e = new Event(e).stop();
+		var key = e.code;
+		var KeyHandler = this.handler;
+		if(!KeyHandler.buffer.contains(key)) KeyHandler.buffer.push(key); 	
+	},
+	up:function(e)
+	{
+		e = new Event(e).stop();
+		var key = e.code;
+		var KeyHandler = this.handler;
+		KeyHandler.buffer.remove(key);
+	}
+});
+
+var MainBoard = new Class({
+    initialize: function(dim)
+	{
+		this.element = new Element('div')
+		.setStyles(dim)
+		.injectInside(document.body);
+		
+		this.limit = this.element.getCoordinates();
+		
+		this.grey = {
+			that:this,
+			spots:new Array(
+				{top:this.limit.top,left:this.limit.left},
+				{top:this.limit.bottom-25,left:this.limit.left},
+				{top:this.limit.top,left:this.limit.right-25},
+				{top:this.limit.bottom-25,left:this.limit.right-25}
+			),
+			classes:new Array('RS','RN','LS','LN')
+		}
+		
+	}
+});	
+
+
+
+$(window).addEvent('domready',function()
+{
+		
+		var cursors = new KeyHandler();
+		var map1 = new MainBoard({'width':800,'height':600,'margin':'0 auto','background-color':'#000000'});
+		//var map1 = new MainBoard({'width':600,'height':480,'margin':'0 auto','background-color':'#000000'});
+		
+		var player = new Nave.obj('player1');
+			player.step = 4;
+			player.refresh = 5;
+			player.keyInput = cursors;
+			player.Board = map1;
+			player.create();	
+			player.element.setStyles(
+			{
+				'top':(map1.limit.height/2)+map1.limit.top,
+				'left':(map1.limit.width/2)+map1.limit.left
+			})
+			player.init = player.element.getCoordinates();
+			player.start();
+			
+		
+		var random = Math.round(Math.random()*3);
+		var position = map1.grey.spots[random];
+		var enemy = new Nave.obj('enemy1');
+			enemy.step = 1;
+			enemy.refresh = 30;
+			enemy.Board = map1;
+			enemy.create();
+			enemy.element.setStyles(position);
+			enemy.element.className = 'nave';
+			enemy.element.addClass(map1.grey.classes[random]);
+			enemy.init = enemy.element.getCoordinates();
+			
+
+			enemy.follow(player);
+			
+		
+			
+		var asdasd = function()
+		{
+			
+			var random = Math.round(Math.random()*3);
+			var position = map1.grey.spots[random];
+			var enemy = new Nave.obj('enemy'+Math.random());
+				enemy.step = 1;
+				enemy.refresh = 200;
+				enemy.Board = map1;
+				enemy.create();
+				enemy.element.setStyles(position);
+				enemy.element.className = 'nave';
+				enemy.element.addClass(map1.grey.classes[random]);
+				enemy.init = enemy.element.getCoordinates();
+				enemy.follow(player);
+				
+			
+				
+		}.periodical(1000);	
+			
+			
+			
+});
+
+
+
+</script>
+</body>
+</html>

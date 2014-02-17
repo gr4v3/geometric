@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document */
+
+.nave {
+	position:absolute;
+	top:50%;
+	left:50%;
+	width:25px;
+	height:25px;
+}
+
+.N {
+	background-image:url(N-icon.png);
+}
+
+.S {
+	background-image:url(S-icon.png);
+}
+
+.R {
+	background-image:url(R-icon.png);
+}
+
+.L {
+	background-image:url(L-icon.png);
+}
+
+.RN {
+	background-image:url(RN-icon.png);
+}
+
+.LN {
+	background-image:url(LN-icon.png);
+}
+
+.RS {
+	background-image:url(RS-icon.png);
+}
+
+.LS {
+	width:24px;
+	background-image:url(LS-icon.png);
+}
+
+.fire_1 {
+	position:absolute;
+	background-color:#33CCFF;
+	width:3px;
+	height:5px;
+}
