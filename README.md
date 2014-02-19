@@ -1,11 +1,11 @@
-geometric
-=========
+geometric wars game
+===================
 
 
-v0.01
+v0.01 
 
-geometric wars in javascript mode
-=================================
+geometric wars in javascript
+============================
 
 
-the code structure will eventualy change a lot since it is a very old project.
+The code structure will eventualy change a lot since it is a very old project.
